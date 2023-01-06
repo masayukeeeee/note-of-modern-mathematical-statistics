@@ -1,0 +1,744 @@
+\documentclass[12pt,a4j,draft]{jarticle}
+\usepackage{graphicx}
+\usepackage[margin=20mm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tipa}
+%\usepackage{txfonts}
+\usepackage{textcomp}
+\usepackage{amsthm}
+\usepackage{array}
+%\usepackage{xy}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+% \fancyhf{}
+% \fancyhead[LE,RO]{\bfseries\thepage}
+% \fancyhead[LO]{\bfseries\rightmark}
+% \fancyhead[RE]{\bfseries\leftmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headheight}{3.0pt}
+\setlength{\footskip}{0in}
+\renewcommand{\footruleskip}{0pt}
+\fancypagestyle{plain}{%
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt}
+}
+\mathtoolsset{showonlyrefs=true}
+\numberwithin{equation}{section}
+%
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{definition}{定義}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{property}{性質}[section]
+%
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\I}{\mathbb I}
+\newcommand{\C}{\mathbb C}
+\newcommand{\mysetminus}{\hspace{1mm} \backslash \hspace{1mm}  }
+\newcommand{\argmax}{\mathop{\rm arg~max}\limits}
+\newcommand{\argmin}{\mathop{\rm arg~min}\limits}
+\newcommand{\Cov}{\rm Cov}
+\newcommand{\E}{\text{E}}
+\newcommand{\V}{\text{Var}}
+\newcommand{\bm}{\boldsymbol}
+\newcommand{\inv}[1]{#1^{-1}}
+\newcommand{\tp}[1]{#1^{\top}}
+\newcommand{\rn}[1]{\mathbb R^{#1}}
+\newcommand{\rnm}[2]{\mathbb R^{#1\times#2}}
+\newcommand{\sqrn}[1]{\mathbb R^{#1\times#1}}
+\newcommand{\sforall}{{}^{\forall}}
+\newcommand{\sexists}{{}^{\exists}}
+\newcommand{\sequence}[3]{#1_{#2},\ldots,#1_{#3}}
+\newcommand{\addseq}[3]{#1_{#2}+\cdots+#1_{#3}}
+\newcommand{\subseq}[3]{#1_{#2}-\cdots-#1_{#3}}
+\newcommand{\pmseq}[3]{#1_{#2}\pm\cdots\pm#1_{#3}}
+\newcommand{\calcseq}[4]{#1_{#2}#4\cdots#4#1_{#3}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\tr}{\text{tr}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\Bin}{\text{Bin}}
+%
+%\parindent 0in
+\parskip 0.05in
+%
+%
+\title{\center 現代数理統計学:学習ノート }
+\author{Masayuki Sakai}
+\date{2022/12 - }
+%
+\begin{document}
+\maketitle
+% \frontmatter
+
+\tableofcontents
+%
+\newpage
+% \mainmatter
+%
+\section{確率と１次元の確率変数}
+% your text here
+\subsection{確率と確率変数}
+
+確率的に発生する二つの事象$A,B$について$P(A) = P(B) = 1/2$であるとする．
+この時，
+
+\begin{equation}
+    X(e) = \begin{cases} 1 & e=A \\ 0 & e=B \end{cases}    
+\end{equation}
+
+
+とすると，$X$が取りうる値は確率的に変動する．このような変数を\textbf{確率変数}(random variable)と呼ぶ．
+実際に確率変数が取った値を\textbf{実現値}という．記法上は確率変数と実現値をアルファベットの大文字・小文字で区別する慣習もある．
+例えば
+
+\begin{equation}
+P(X=x) = {1 \over 2}, \hspace{5mm} x=0,1
+\label{eq:example-d-rv}
+\end{equation}
+
+となる．
+
+\subsubsection{より厳密な確率変数の定義}
+
+$X$が\textbf{離散型確率変数}(discrete random variable: d-rv)であるとは，$X$のとり得る値が有限個または可算無限個の場合であり，$X$が\textbf{連続型確率変数}(continuous random variable: c-rv)であるとは，以下で定義する密度関数を持つ場合をいう．
+\\
+d-rv $X$の場合\eqref{eq:example-d-rv}式のように各$x$での確率を考えて，これを関数と見做したものを確率変数$X$の\textbf{確率関数}(probability function)という．
+
+\begin{equation}
+    p(x) = P(X=x)
+\end{equation}
+
+が確率関数であり，上の例では 
+
+\begin{equation}
+    p(x) = \begin{cases}
+        \frac12 & x = 1,2 \\
+        0 & else
+    \end{cases}
+\end{equation}
+
+である．
+
+\begin{property}[確率関数の性質]
+確率関数は次の性質を持つ．
+
+\begin{align}
+    p(x) \geq 0, \forall x \\
+    \sum_{x} p(x) = 1
+    \label{eq:pf-property-1}
+\end{align}
+
+\end{property}
+
+\subsubsection{累積分布関数・分布関数}
+
+確率関数の累積和を取ったものを\textbf{累積分布関数}(cumulative distribution function: cdf)，あるいは\textbf{分布関数}(distribution function)という．すなわち
+
+\begin{equation}
+    F(x) = P(X \leq x) = \sum_{y \leq x}p(y)
+\end{equation}
+
+である．cdfは「右側連続」となる． \\
+
+cdfからpfを求めるには
+
+\begin{equation}
+    p(x) = F(x) - \lim_{x_n \rightarrow x-} F(x_n) = F(x) - F(x-)
+\end{equation}
+
+とすればよく，すなわち差を取れば良いことがわかる．ここで$\lim_{x_n \rightarrow x-}$は負の方向から単調に増加した時の収束先を意味している．
+
+\subsubsection{連続型確率変数: Continuous random variable}
+
+連続型確率分布(c-rv)は取りうる実現値が連続値であるような場合をいう．例えば，$X \in [0,1]$でどの値も同様に確からしく取るもの，などが挙げられる． c-rvについては，特定の点の確率を考えることは意味がなく，\textbf{確率密度関数}(probability density function: pdf) $f(x)$を用いて特徴づける．
+
+\begin{definition}[確率密度関数: pdf]
+\begin{equation}
+    f(x) = \lim_{\varepsilon \rightarrow 0} \frac{P(x \leq X \leq x + \varepsilon)}{\varepsilon}
+    \label{eq:def-pdf}
+\end{equation}
+\end{definition}
+
+\eqref{eq:def-pdf}では任意の $x$ で右辺の極限が存在することを仮定している．厳密に測度論を用いれば，「ほとんどすべての $x$ について」存在すれば良い．\\
+
+c-rvが従う分布を連続分布と良い，連続分布についてcdfは次のように定義される．
+
+\begin{definition}[連続分布の累積分布関数]
+$f(x)$を連続分布の確率密度関数(pdf)として，その累積分布関数(cdf)は
+    \begin{equation}
+        f(x) = \lim_{\varepsilon \rightarrow 0} \frac{F(x+\varepsilon) - F(x)}{\varepsilon} = F'(x)
+    \end{equation}
+と定義される．
+\end{definition}
+
+すなわち，連続分布においては，pdfはcdfの微分として，cdfはpdfの積分として得られる．そこで，
+
+\begin{equation}
+    P(a < X \leq b) = F(b) - (a) = \int_a^b f(x) dx
+\end{equation}
+
+を得る．これは，$f(x)$における $[a,b]$ と $x$ 軸に囲まれた領域の面積と対応する．
+これが確率をなすためには
+
+\begin{equation}
+    \int_{-\infty}^{\infty} f(x) dx = 1
+    \label{eq:pdf-total-integral}
+\end{equation}
+
+とならばければならない．例えば，pdf$f(x)$が特定の関数 $h(x)$ と定数 $c$ によって
+
+\begin{equation}
+    f(x) = c \times h(x)
+\end{equation}
+
+と表される時， \eqref{eq:pdf-total-integral} より， 
+
+\begin{equation}
+    c = \frac{1}{\displaystyle \int_{-\infty}^{\infty} h(x) dx}
+\end{equation}
+
+と定めることができる．この時 $c$ を\textbf{基準化定数}(normalizing constant)，正規化定数などと呼ぶ．
+%
+\subsubsection{確率変数と分布の関係}
+確率変数 $X$ のcdf $F(x)$ であるとき， \textbf{$X$は分布$F$に従う}($X$ is distributed according to F)などと言い，
+
+\begin{equation}
+    X \sim F
+\end{equation}
+
+と表すことが多い．
+%
+\subsection{確率変数の期待値と分布の特性値}
+
+\begin{definition}[期待値(expected value)]
+    \label{def:expected-value}
+    $X$ がd-rvの時，$X$の期待値$\mu = E[X]$は次のように定義される．
+    \begin{equation}
+        E[X] = \sum_x xp(x)
+    \end{equation}
+
+    また，$X$がc-rvの時，$X$の期待値は次のように定義される．
+    \begin{equation}
+        E[X] = \int x f(x) dx
+    \end{equation}
+\end{definition}
+
+期待値は平均とも呼ばれるが，標本平均と明確に区別するために\textbf{母平均}(population mean)と呼ぶこともある．
+期待値のように分布の位置を表す母数を\textbf{位置母数}(location parameter)という．
+
+
+\begin{definition}[分散(variance, population variance)]
+    \label{def:variance}
+        $X$ がd-rvの時，$X$の分散$\sigma^2 = \V [X]$は次のように定義される．
+    \begin{equation}
+        E[X] = \sum_x (x - \mu)^2 p(x)
+    \end{equation}
+
+    また，$X$がc-rvの時，$X$の分散は次のように定義される．
+    \begin{equation}
+        E[X] = \int (x - \mu)^2 f(x) dx
+    \end{equation}
+\end{definition}
+
+分散の正の平方根 $\sigma = \sqrt{\sigma^2}$ を母標準偏差(population standard deviation)という．これは実現値の散らばり具合を表し，
+\textbf{尺度母数}(scale parameter)とも呼ばれる．
+
+一般に$g(X)$を$X$の関数として，$g(X)$の期待値を
+
+\begin{equation}
+    \label{eq:mean-of-gx}
+    E[g(X)] = \begin{cases}
+        \displaystyle \sum_x g(x) p(x) \\
+        \displaystyle \int g(x) f(x) dx
+    \end{cases}
+\end{equation}
+
+と表す．
+
+\begin{definition}[モーメント]
+    \label{def:moment}
+$g(X) = (X - \mu)^2$とおくと$\V [X] = E[(X - \mu)^2] = E[g(X)]$と表せる．$g(X)$を$X$の冪乗としたとき $E[g(X)]$を\textbf{モーメント}(積率，\rm{moment})という．特に，原点周りの$k$次のモーメント($k=0,1,2,\ldots$)は
+
+\begin{equation}
+    \mu'_k = E[X^k]
+\end{equation}
+
+で定義される．また平均周りの$k$次のモーメント($k=0,1,2,\ldots$)は
+
+\begin{equation}
+    \mu_k = E[(X-\mu)^k]
+\end{equation}
+
+で定義される．
+\end{definition}
+
+\subsubsection{期待値と線形性}
+
+期待値の計算においては，次のような線形性を持つ．
+
+\begin{equation}
+    E[ag(X) + bh(X)] = a E[g(X)] + b E[h(X)]
+\end{equation}
+
+ここで$a,b$は定数，$g,h$は$X$の関数である．これより，分散は
+
+\begin{align}
+    \sigma^2 &= E[(X - \mu)^2] = E[X^2 - 2 \mu X + \mu^2] = E[X^2] - 2\mu E[X] + \mu^2 \\
+    &= E[X^2] - \mu 2
+\label{eq:variance-expansion}
+\end{align}
+
+と表現することができる．これは，二乗の平均から平均の二乗を引いたものである．
+また，分散については以下が成り立つ（容易に確認できる）．
+
+\begin{equation}
+    \V [a + bX] = b^2 \V [X]
+\end{equation}
+
+\subsubsection{定義関数とその期待値}
+
+\begin{definition}
+\label{def:indicator-function}
+$g(x)$ が$0,1$どちらかのみを取る場合を考える．いま，$g(x) = 1$となる$x$の集合を $A = \{ x | g(x) = 1 \}$とする．
+一般に集合$B$の\textbf{定義関数}あるいは\textbf{指示関数}(indicator function)を
+
+\begin{equation}
+    I_B (x) = \begin{cases}
+        1, & \text{if } x \in B \\
+        0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+と定義する．
+\end{definition}
+
+定義より明らかに，$g(x) = I_A (x)$である．
+これより，集合$A$の定義関数の期待値は$X$が$A$に属する確率に一致する．つまり，
+
+\begin{equation}
+    E[I_A (X)] = P(X \in A)
+\end{equation}
+
+となる．
+
+ここで，$Y = g(X)$を新たな確率変数として$Y$の分布に基づいて定義\ref{def:expected-value}で定義したものが\eqref{eq:mean-of-gx}に一致するかを確かめる必要があるが，厳密には測度論が必要になる．
+
+特定の条件下においての証明は練習問題として取っておく．
+
+\subsubsection{期待値の存在性}
+
+期待値が無限級数や積分を含むことを踏まえれば，収束について議論する必要が生じる．
+有名な例としては，ペテルスブルグのパラドックスがある．これは確率変数$X$の取りうる値を$2^k, k=1,2,\ldots$として，
+
+\begin{equation}
+    P(X=2^k) = \frac{1}{2^k}
+\end{equation}
+
+とする．このとき
+
+\begin{equation}
+    E[X] = \sum_{k=1}^{\infty} 2^k = 1 + 1 + \ldots = \infty
+\end{equation}
+
+となる．これは歪みのないコインを投げて$k$回目に初めて表が出たら$2^k$円もらえるようなくじの結果とみなせて，このくじの平均的な収益が無限大であるというのは
+直感にそぐわない．このことからパラドックスと呼ばれている．
+
+期待値が収束しない場合は注意する必要がある．多くの場合は$E[|g(X)|] < \infty$となる場合を考えることになる．ここの絶対値は負の方向への発散も除外するためである．
+
+\subsubsection{パーセント点}
+
+１次元分布のパーセント点あるいはパーセンタイル（percentile）とは、ある値$x$がその分布において 昇順に$100 \alpha \%$となるようなとき， $x$は$100 \alpha \%$点であるという．
+特に $50\%$点のことを\textbf{中央値}(median)などと呼ぶ。逆に降順に考える場合もあるが．その場合明確に区別するために\textbf{上側100$\alpha\%$点，下側100$\alpha\%$点}，などという．
+
+もし，
+\begin{equation}
+    P(X \leq -x) = P(X \leq x), \hspace{3mm} \forall x
+    \label{eq:symmetry-distribution-1}
+\end{equation}
+を満たすのであれば$X$の分布は原点に関して対象であるという．このとき，上側$\alpha$点と下側$\alpha$点は符号のみが異なるだけなので，\textbf{両側$2\alpha$点}と呼ぶこともある．
+
+累積分布関数$F$が連続かつ狭義の単調増加の場合は，$F$の逆関数$F^{-1}(u), 0<u<1$が一意に定まり， $x_u = F^{-1}(u)$は $P(X \leq x_u) = u, P(X \geq x_u) = 1-u$を満たす．すなわち， $x_u$ は $F$ の下側$u$点である． このような $\inv{F}$を\textbf{分位点関数}(quantile function)という．
+
+\subsubsection{一般の場合の定義}
+
+$F$の不連続点や平坦な部分があった場合（単調関数ではない場合）は$\inv{F}$を自明に定義できない．
+そこでまず上側確率と下側確率をそれぞれ考えていこう．
+
+まず下側確率に対応して$\inv{F_L}(u)$を以下のように定義する．
+
+\begin{equation}
+\begin{split}
+    \inv{F_L}(u) &= \inf \{ x | F(x) \geq u \} \\
+    &= \min \{ x|F(x) \geq x \}
+    \label{eq:def-lower-probability}
+\end{split}
+\end{equation}
+
+\begin{proof}[Proof. \eqref{eq:def-lower-probability}式における$\inf, \min$の等号成立]
+    まず，
+    \begin{align}
+        x_0 &= \inf \{ x | F(x) \geq u \} \\
+        A &= \{ x | F(x) \geq u \}\\
+        x_n &\rightarrow x_0+
+    \end{align}
+    とする．
+
+    $F$の右連続性より，$F(x_0) = \displaystyle \lim_{n \rightarrow \infty} F(x_n)$である．いま定めかたより$\forall x_n \in A$で$F(x_n) \geq u$であるので，もちろん $F(x_0) \geq u$である．
+    これより， $x_0 \in A$かつ$x_0 = \min A$となることがわかる．
+\end{proof}  
+
+\begin{proof}[Proof. $\inv{F_L}$の左連続性]
+    $\inv{F_L}$ は左連続である．つまり $u_n \rightarrow u-$ のとき， $\displaystyle \lim_{n \rightarrow \infty} \inv{F_L} (u_n) = \inv{F_L}(u)$ となる．
+    まず $x_n = \inv{F_L}(u_n), x = \inv{F_L}(u)$ とおく． $u_n \rightarrow u-$ つまり負の方向から近づけることを考えれば，明らかに $x_n$ は単調非減少数列を為す．故に $x^\ast = \displaystyle \lim_{ n \rightarrow \infty} x_n$ が存在する．これより $\forall x_n \leq x$ であり，同様に $x^\ast \leq x$となる．\eqref{eq:def-lower-probability}式より， $\forall n$ について $F(x_n) \geq u_n$ である． 
+    さて， $x^\ast \geq x_n$ より $F(x^\ast) \geq F(x_n)$ で， $n \rightarrow \infty$ のとき $F(x^\ast) \geq u$ である． 従って， $x = \inv{F_L}(u)$ という定義より， $x^\ast \geq x$ となる．
+    以上より， $\displaystyle \lim_{n \rightarrow \infty} x_n = x^\ast = x$ を得る． よって $\inv{F_L}$ は左連続である．
+\end{proof}
+
+次に上側確率に対応して$\inv{F_R}$を次のように定義する．
+
+\begin{equation}
+    \begin{split}
+        \inv{F_R} &= \sup \{ x | P(X \geq x) \geq 1-u \} \\
+        &= \max \{ x | P(X \geq x) \geq 1-u \}
+    \end{split}
+    \label{eq:def-upper-probability}
+\end{equation}
+
+$\inv{F_R}$は$\inv{F_L}$と対称的に定義されていることから，右連続となる．
+
+さて，ここで $x_L = \inv{F_L}(u) $として， $\forall \varepsilon > 0$ に対して $F(x_L - \varepsilon) < u$ となる．これより $P(X \geq x_L - \varepsilon) \geq P(X > x_L - \varepsilon) = 1 - F(x_L - \varepsilon) > 1 - u$を得る．　従って $x_L - \varepsilon \leq x_R$ が成り立つ． $\varepsilon > 0$は任意なので $x_L \leq x_R$ が示された．従って
+
+\begin{equation}
+    \inv{F_R}(u) \geq \inv{F_L}(u)
+\end{equation}
+
+が成り立つ．
+
+また， $I_u = \{ x | P(X leq x) \geq u, P(X \geq x) \geq 1 - u \}$ とおけば， $I_u$ という区間は $I_u = [\inv{F_L}(u), \inv{F_R}(u)] = [x_L, x_R]$ と表せることが示せる． これより， $x_L = x_R$ であれば， $x$ 以下に $u$　以上の確率を含み， $x$ 以上に $1-u$ 以上の確率を含む点 $x = x_L = x_R$ の唯１点に定まることを意味している．
+また，仮に $x_L < x_R$ であれば，複数個の点が存在しており，その最小値が $x_L$ で最大値が $x_R$ となっている．　この場合には下側 $u$点としてこの区間の中点をとるのが自然な定義に思える．
+
+以上の議論よりcdf Fを持つ分布の下側 $\alpha$ 点 $x(\alpha)$ を次のように定義しよう．
+
+\begin{equation}
+    \label{eq:def-lower-probability-2}
+    x(\alpha) = \frac{\inv{F_L}(\alpha) + \inv{F_L}(\alpha)}{2}, \hspace{5mm} 0 < \alpha < 1
+\end{equation}
+
+$\inv{F_L}$の定義より，
+
+\begin{equation}
+    \label{eq:property-of-percentile-1}
+    x \geq \inv{F_L}(u) \Longleftrightarrow F(x) \geq u
+\end{equation}
+
+が成り立つ．$u$点以上になる$x$であれば，$x$における累積分布関数$F$の値は$u$以上である．
+
+ここで，$U \sim {\rm Unif}(0,1)$($0,1$の間の一様分布)を考えてみる．\eqref{eq:property-of-percentile-1}式が成り立つ確率を評価すると
+
+\begin{equation}
+    P(\inv{F_L}(U) \leq x) = P(U \leq F(x)) = F(x)
+\end{equation}
+
+となる．従って，$\inv{F_L}(U)$は分布$F$に従うことがわかる．
+
+これは，一様分布に従う確率変数を $\inv{F_L}$ で変換すると， $F$に従う確率変数が得られることを示している．
+
+標本に対しては後に紹介する経験分布関数を用いることができる．また累積分布関数の逆関数としては $\inv{F_L}, \inv{F_R}$のいずれを用いても良く，これらには右，左連続以外に本質的な差はない．
+
+$\alpha$が0または1に収束する時の $x(\alpha)$の $\pm \infty$ への発散の速さ，あるいは $x \rightarrow \pm \infty$の時の $F(x)$の0，あるいは1への収束の速さを，\textbf{分布$F$の裾の重さ}と表現することがある．
+
+例えば， $x$が非常に大きくなっても $F(x)$ が1に近づかない場合，分布の右裾に大きい確率が残っていることになり，このような状態を右裾が重たい，などという．左裾も同様．
+
+期待値や標準偏差は積分を用いて定義されるため分布の裾の大きさの影響を受けやすい．極端な場合にはこれらが有限の値を持たない（存在しない）こともある．　コーシー分布などは代表的な例である．
+
+そこで，分布の裾の重さの影響を受けないような指標\textbf{頑健な}(robust)指標として中央値 $x(0.5)$や４分位範囲（inter-quantile range） $Q = x(0.75) - x(0.25)$ が用いられることもある．
+
+\subsection{母関数 Generating function} 
+
+確率分布やそのモーメントを調べる際に母関数を用いると便利なことがある．母関数と名のつくものには\textbf{確立母関数，積率母関数，特性母関数}があるが，これらは概念的には同じものである．特性関数は応用上最も一般性を持つが，複素積分を必要とするため数学的に難易度が高い（厳密な議論は確率論を必要とする）．
+
+ここでは，確立母関数・積率母関数・特性関数の順に紹介する．
+
+\subsubsection{確率母関数 Probability generating function}
+
+\textbf{確率母関数}(probability generating function)は主に皮膚の整数値を取る離散確率変数の分布を調べるのに用いられる． $|s| \leq 1$ として， $s$ を変数とする確率母関数を 
+
+\begin{equation}
+    \label{eq:def-pgf}
+    G(s) = E[s^X] = \sum_{x=0}^{\infty} s^x p(x)
+\end{equation}
+
+と定義する． $G(1) = \sum p(x) = 1$ である．　また\eqref{eq:def-pgf}式の収束は $p(x) \geq 0, \sum p(x) = 1$ より $|s| \leq 1$ の範囲で保証される．  
+
+母関数と確率分布は１対１に対応することが知られており，確率分布について知りたい場合，その母関数を対象にすることができる．
+非負整数上の確率分布 $p(x)$ が与えられれば，\eqref{eq:def-pgf}により確率母関数 $G(s)$ が定まる．逆に， $G(s)$ が与えられた時， $G(s)$ を$k$回微分して $s=0$ とすると， $G^{(k)}(0)/k! = p(k)$ となる．すなわち，母関数と確率分布が１対１に対応していることがわかる．
+
+例えば，１階微分を考えれば，
+
+\begin{align}
+    \label{eq:diff-of-g}
+    G'(s) = \sum_{x=0}^{\infty} x s^{x-1} p(x)
+\end{align}
+
+であり， $s=0$ のとき
+
+\begin{align*}
+    G'(0) = p(1)
+\end{align*}
+
+となる．これは $x=1$ の時のみ $s^{x-1}$ の項が1となり，他の場合では0となるためである．さらに2階微分を考えれば
+
+\begin{align*}
+    G^{(2)}(s) = \sum_{x=0}^{\infty} x(x-1) s^{x-2} p(x)
+\end{align*}
+
+となる． 同様に$s=0$のとき
+
+\begin{align*}
+    G^{(2)}(0) = 2 p(2)
+\end{align*}
+
+となる．この時出てくる $k!$ の項をキャンセルするために， $G^{(k)}(0) / k!$ としておけば，欲しかった $p(x)$ の項が残ることがわかる．ただし， $G(s)$ の微分は収束が保証される　$|s| \leq 1$ で考えるものとする．
+
+\subsubsection{確率母関数とモーメント}  
+
+確率母関数はモーメントを求めるためにも用いることができる．いま $G(s)$の1階微分は\eqref{eq:diff-of-g}式で与えられていて，もし $E[X]$ が存在するならば $s=1$ の時
+
+\begin{align}
+    G'(1) = \sum_{x=0}^\infty x p(x) = E[X]
+\end{align}
+
+であることがわかる．同様に$X$の$k$次のモーメントが存在するならば
+
+\begin{align}
+    G^{(k)}(1) = E[X(X-1)\cdots (X-k+1)]
+\end{align}
+
+となり，$k$次のモーメントと一致する．これを\textbf{階乗モーメント}(factorial moment)と呼ぶ．
+
+\subsubsection{積率母関数 Moment generating function}
+
+確率母関数において， $s=e^\theta, \theta \in \R$　と置いたものが\textbf{積率母関数}(moment generating function)であり，
+
+\begin{equation}
+    \label{eq:def-mgf}
+    \phi(\theta) = E[e^{(\theta X)}]
+\end{equation}
+
+で定義される．　積率母関数は一般の（連続）確率変数について用いられることに注意されたい． $\theta \leq 0$ とおくと $s = e^\theta \leq 1$ となり非負整数を考える場合は，確率母関数と同等となる．
+
+名の通り，積率母関数はモーメントを計算するのに便利な関数である． \textbf{積分と微分の交換が保証されているとして}，
+
+\begin{equation}
+    \label{eq:mfg-moment}
+    \left. \frac{d^k \phi (\theta)}{d \theta^k} \right |_{\theta=0} = 
+    \left. E[X^k e^{\theta X}] \right |_{\theta =0} =
+    E[X^k] = \mu'_k
+\end{equation}
+
+であり， $\phi(\theta)$の$0$における高次の微分係数が $X$ の原点周りのモーメントを表している．
+
+従って，平均 $\mu$ まわりのモーメントを求めるには， $e^{-\mu \theta} \phi(\theta) = E[e^{\theta(X-\mu)}]$に注意して， $\phi(\theta)$ のかわりに $\phi(\theta) e^{-\theta \mu}$ を積率母関数として用いれば良い．
+
+積率母関数について問題になるのは\eqref{eq:def-mgf}式の積分の存在である． $\theta > 0$とすれば， $\forall k > 0, \displaystyle \lim_{x \rightarrow \infty} x^k / e^{\theta x} = 0$ であるから， $\theta > 0$ に対しては積率母関数が存在すれば， 全ての正数 $k$ について $\displaystyle \sum_{x \geq 0} x^k p(x)$ あるいは $\displaystyle \int_{x \geq 0} x^k f(x) dx$ が収束しなければならない． \\
+
+ちなみに， $\forall k > 0, \displaystyle \lim_{x \rightarrow \infty} x^k / e^{\theta x} = 0$ については高校数学の範囲で証明が可能である． 例えば $\displaystyle \lim_{x \rightarrow \infty} e^x / x^r = \infty$ を示せれば良い． $x > r+1$で $x$が整数の場合を考え，二項定理を用いて証明することもできる．
+
+同様に， $\theta < 0$について積率母関数が存在すれば $\displaystyle \sum_{x \leq 0} |x|^k p(x)$ あるいは $\displaystyle \int_{x \leq 0} |x|^k f(x) dx$が全ての正数 $k$ に対して存在しなければならない．　実際，積率母関数が有用なのは$0$をない点として含むある区間 $(-a, b)$ で積率母関数が存在する場合で，　そのときは全ての次数のモーメントが存在し，また\eqref{eq:mfg-moment}式の微分と積分の交換が保証される．またこの場合原点まわりで 
+
+\begin{align}
+    \phi(\theta) &= E\left[ e^{\theta X} \right] = E \left[ 1 + \theta X + \frac{\theta^2 X^2}{2!} + \cdots \right] \\
+    &= 1 + \theta \mu'_1 + \frac{\theta^2}{2!} \mu'_2 + \cdots = \sum_{k=0}^{\infty} \frac{\theta^k}{k!} \mu'_k
+\end{align}
+
+の形の無限級数表現が可能であることが知られている．積率母関数についても，積率母関数が存在すれば積率母関数は分布を一意的に決めるという点が重要である．
+
+\subsubsection{母関数の諸問題と特性関数}
+
+積率母関数には積分の存在の問題があり，\textbf{平均や分散の存在しない分布には用いることはできない}．対して特性関数は全ての分布に関して存在するので，最も一般的な概念と言える．
+
+特性関数は積率母関数において $\theta$ を純虚数 $it$ とおくもので
+
+\begin{align}
+    \label{eq:def-characteristic-function}
+    \phi(t) = E[e^{it X}] = E[\cos(tX) + i \sin(tX)]
+\end{align}
+
+で定義される．
+
+\subsection{主な一次元分布} 
+
+\subsubsection{２項分布}  
+
+コイン投げのように結果が2通りしかないような確率的な試行を\textbf{ベルヌーイ試行}(Bernoulli trial)という．また $X_i$のように$0,1$のみをとる確率変数を\textbf{ベルヌーイ変数}という． $1$が出る確率 $p$ を\textbf{成功確率}などと呼んだりする．
+
+ここで確率変数 $X$ を
+
+\begin{align}
+    X = X_1 + \cdots + X_n
+\end{align}
+
+と定義する．これはベルヌーイ試行を $n$ 回行ったとき $1$ が出た回数を表している． $X$ の分布をパラメータ $n,p$ の\textbf{２項分布}(Binomial distribution)といい， $\Bin(n,p)$と表すことにする． $\Bin(n,p)$の確率関数は以下で与えられる．
+
+\begin{align}
+    \label{eq:def-pdf-of-bin}
+    p(k) = \binom{n}{k} p^k (1-p)^{n-k}
+\end{align}
+
+ここで $\displaystyle \binom{n}{k} = _nC_k$である． 
+
+\subsubsection{２項分布の確率母関数・期待値・分散}
+
+$X$ の確率母関数は２項定理を用いて
+
+\begin{align}
+    \label{eq:pgf-of-bin}
+    G(s) &= E[s^X] = \sum_{x=0}^{n} s^x \binom{n}{x} p^x (1-p)^{n-x} \\
+    &= \sum_{x=0}^{n} \binom{n}{k} (sp)^x (1-p)^{n-x} \\
+    &= (ps + 1 - p)^n = (1 + p(s-1))^n
+\end{align}
+
+とできる．これを用いれば， $G'(s) = np(1 + p(s-1))^{n-1}$より $G'(1) = E[X] = np$． 同様に $G''(s) = n(n-1)p^2(1 + p(s-1))^{n-2}$より， $G''(1) = E[X(X-1)] = n(n-1)p^2$ を得る．これより，
+
+\begin{align}
+    \V [X] &= E[(X - E[X])^2] = E[X^2] - E[X]^2 \\
+    &= E[X(X-1)] + E[X] - E[X]^2 \\
+    &= n(n-1)p^2 + np - (np)^2 \\
+    &= np(n-1)p + np - (np)^2 \\
+    &= np(np - p + 1 - np) \\
+    &= np(1 - p)
+\end{align}
+
+を得る． ２項分布と呼ぶ限りは，パラメータ $n,p$ の組み合わせの数だけ分布が存在するので，分布の集合と言って良い． このような確率分布の集合のことを\textbf{分布族}(family of distributions)とも呼ぶ． ただし２項分布のことをわざわざ２項分布族などと呼ぶことはない．
+この意味で，一般的に知られている確率分布というのは基本的に分布族を指している．分布族には確率分布を定めるためのパラメータ（あるいは母数ともいう）を持っている．
+
+\subsubsection{ポアソン分布}
+
+ポアソン分布は２項分布において， $n$を大， $p$を小とした時の極限として定義される．
+
+\subsubsection{負の２項分布}
+
+負の２項分布は， $X_i=1$となる確率が$p$であるようなベルヌーイ試行に関連して定義される．いま，確率変数$X$を$r$回の$1$が出るまでに$0$が出た回数とする． $X=k$とは $r$回１を得るまでに$k$回0が出たことを意味する． 従って，この場合ベルヌーイ試行は$r+k$回行われていることになる． $r+k-1$回までに0が$k-1$出て，$r+k$回目は$1$で固定される．このような確率は
+
+\begin{align}
+    \label{eq:def-pdf-of-negative-binom}
+    P(X=k) = \binom{r+k-1}{k}(1-p)^k p^{r-1} \times p = \binom{r+k-1}{k}(1-p)^{k} p^r
+\end{align}
+
+で表現できる．　このような確率関数を持つ分布を\textbf{パラメータ$r,p$の負の二項分布}といい，$\text{NB}(r,p)$と表す．
+
+\eqref{eq:def-pdf-of-negative-binom}式が確率関数となっているのか（和が１となっているか）を確認しておこう．
+いま，$0 < p \leq 1, q = 1-p$ として， $p^{-r} = (1 - p)^{-r}$ を $q$ の無限級数にテーラー展開すれば
+
+\begin{align}
+    (1 - q)^{-r} = 1 + rq + \frac{r(r+1)}{2!} q^2 + \cdots = \sum_{k=1}^{\infty} \binom{r+k-1}{k} q^k
+\end{align}
+
+ここで両辺に $p^r$ をかければ和が1になることが確かめられる．
+
+\subsubsection{幾何分布}
+
+負の二項分布において， $r=1$のとき，
+
+\begin{align}
+    \label{eq:def-pf-of-geo}
+    P(X=k) = p(1-p)^k
+\end{align}
+
+となり，確率関数が幾何級数となることから，これを\textbf{幾何分布}(geometric distribution)という．
+幾何分布は最初に1が出るまでに0が出る回数の分布として解釈できる．
+
+\subsubsection{負の二項分布の確率母関数・平均・分散}
+
+負の二項分布の確率母関数は以下のようになる． 
+
+\begin{align}
+    G(s) &= E[s^X] = \sum_{x=0}^{\infty} s^x \binom{r+x-1}{x} (1-p)^x p^r \\
+    &= p^r \sum_{x=0}^{\infty} \binom{r+x-1}{x} (s(1-p))^x \\
+    &= \frac{p^r}{(1 - (s(1-p)))^r} \sum_{x=0}^{\infty} \binom{r+x-1}{x} (s(1-p))^x (1 - s(1-p))^r \\
+    &= \left( \frac{p}{1-sq} \right)^r \sum_{x=0}^{\infty} P(Y=x) \\
+    &= \left( \frac{p}{1-sq} \right)^r
+\end{align}
+
+途中の式変形で， 生起確率$s(1-p)$の負の二項分布に従う確率変数$Y$の確率分布の総和の形を作り， これが1となることを利用している．
+
+あとはこの形を利用して $G'(s), G''(s)$を求め，$s=1$の場合を用いて $E[X], \V[X]$を求めれば良い． 
+
+\begin{align}
+    G'(s)  &= p^r rq (1 - qs)^{-(r+1)} \\
+    G''(s) &= p^r r (r + 1) q^2 (1 - qs)^{-(r+2)}
+\end{align}
+
+より，
+
+\begin{align}
+    G'(1)  &= E[X] = \frac{r(1-p)}{p} \\
+    G''(2) &= E[X(X-1)] = \frac{r(r+1)(1-p)^2}{p^2}
+\end{align}
+
+を得る．従って $E[X] = r(1-p) / p$ で $\V[X]$については 分散の分解の性質を利用して
+
+\begin{align}
+    \V[X] &= E[X^2] - E[X]^2 = E[X(X-1)] + E[X] - E[X]^2 \\
+    &= \frac{r(r+1)(1-p)^2}{p^2} + \frac{r(1-p)}{p} - \left( \frac{r(1-p)}{p} \right)^2 \\
+    &= \frac{r(1-p)}{p^2}
+\end{align}
+
+を得る．
+
+\newpage
+\section{Description of the Principle}
+% your text here
+aaa
+%
+\newpage
+\section{Creation of Cosmos as Objectivation}
+% your text here
+%
+\newpage
+\section{More on Cosmic Subjectivation}
+% your text here
+%
+\newpage
+\section{More on Multiplicity}
+% your text here
+%
+\newpage
+\section{Curvature}
+% your text here
+%
+\newpage
+\section{Action-Reaction Principle}
+% your text here
+%
+\newpage
+\section{Creation of the Physical Universe}
+% your text here
+%
+\section{An Example from the Later Stages}
+% your text here
+%
+\newpage
+\begin{thebibliography}{99}
+\bibitem{baba_books}
+Books of Shrii Shrii Anandamurti (Prabhat Ranjan Sarkar): \\
+http://shop.anandamarga.org/
+\bibitem{anandamitra}
+Avtk. Ananda Mitra Ac., \emph{The Spiritual Philosophy of Shrii Shrii Anandamurti: A Commentary on Ananda Sutram}, Ananda Marga Publications (1991) \\
+ISBN: 81-7252-119-7
+\end{thebibliography}
+\end{document}
+
