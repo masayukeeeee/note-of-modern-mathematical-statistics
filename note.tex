@@ -12,7 +12,6 @@
 \usepackage{fancyhdr}
 \usepackage{mathtools}
 
-\pagestyle{fancy}
 \renewcommand{\sectionmark}[1]{\markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
 % \fancyhf{}
@@ -24,10 +23,15 @@
 \addtolength{\headheight}{3.0pt}
 \setlength{\footskip}{0in}
 \renewcommand{\footruleskip}{0pt}
-\fancypagestyle{plain}{%
 \fancyhead{}
-\renewcommand{\headrulewidth}{0pt}
-}
+\pagestyle{fancy}
+\fancyhead[R]{現代数理統計学:学習ノート}
+\fancyhead[L]{\rightmark}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[CO,CE]{}
+% \fancypagestyle{plain}{%
+% \renewcommand{\headrulewidth}{0pt}
+% }
 \mathtoolsset{showonlyrefs=true}
 \numberwithin{equation}{section}
 %
@@ -40,6 +44,7 @@
 \newtheorem{definition}{定義}[section]
 \newtheorem{theorem}{定理}[section]
 \newtheorem{property}{性質}[section]
+\newtheorem{lemma}{補題}[section]
 %
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
@@ -699,6 +704,144 @@ $X$ の確率母関数は２項定理を用いて
 
 を得る．
 
+\subsubsection{超幾何分布: Hypergeometric distribution}
+
+超幾何分布は，壺からの球を取り出す例えば分かりやすい．いま，壺に$M$個の赤玉と $N-M$個の白玉が入っているとする(合計は $N-M + M = N$個)．この壺から無作為に$n$個の玉を取り出した時の赤玉の数を$X$として $P(X=k)$ を考えよう．$N$個のものから$n$個のものを取り出す場合は $\displaystyle \binom{N}{n}$ で取り出し方は同様に確からしい．ところで， $k$ 個の赤玉が取り出されるには $M$個の中から$k$個， 一方白玉を$N-M$個の中から $n-k$個取り出していることになる．これを考慮すれば，取り出し方の総数は $\displaystyle \binom{M}{k} \times \binom{N-M}{n-k}$ となる($k \leq M, n-k \leq N-M$)．これを踏まえて，$X$の確率関数は
+
+\begin{align}
+    P(X=k) &= \frac{\displaystyle \binom{M}{k} \binom{N-M}{n-k}}{ \displaystyle \binom{N}{n}} \\
+    \max \{ 0, n+M-N \} & \leq k \leq \min \{ n, M \}
+\end{align}
+
+となる． この確率関数の和が$1$となることは， $(1+x)^{N} = (1+x)^M (1+x)^{N-M}$の両辺で$x^n$の係数を比較するとよい．
+二項展開$(a+b)^N = \displaystyle \sum_{n=0}{N} a^n b^{N-n}$ を用いれば，
+
+\begin{align}
+    (1+x)^N &= (1+x)^M(1+x)^{N-M} \\
+    \sum_{n=0}^{N} \binom{N}{n} x^n &= \left( \sum_{m=0}^{M} \binom{M}{m} x^m \right) \left( \sum_{N-M}^{k=0} \binom{N-M}{k} x^k \right)
+\end{align}
+
+が成り立つ．ここで $x^n$の係数を両辺で比較すると， 右辺で$n$を固定した時， 左辺では $m,k$の組み合わせで丁度$n$になっているものがあって，
+
+\begin{align}
+    \binom{N}{n} = \sum_{x=0}^{n} \binom{M}{x} \binom{N-M}{n-x}
+\end{align}
+
+となっていることがわかる．これより，超幾何分布の確率関数の和を考えると，
+
+\begin{align}
+    \sum_{k=0}^{n} P(X=k) &= \sum_{k=0}^{n} \frac{\displaystyle \binom{M}{k} \binom{N-M}{n-k}}{\displaystyle \binom{N}{k}} \\
+    &= \sum_{k=0}^{n} \frac{\displaystyle \binom{M}{k} \binom{N-M}{n-k}}{\displaystyle \binom{M}{k} \binom{N-M}{n-k}} \\
+    &= 1
+\end{align}
+
+となり，確かに和が１になることが確かめられた．
+
+\subsubsection{超幾何分布の平均と分散}
+
+超幾何分布の確率母関数は簡単に表せないので，平均と分散は定義に従って計算を進めていく．
+
+\begin{lemma}
+    \label{lm:combination-property-1}
+    $N, n \in \N, N, n \neq 0, N > n$とする．このとき，以下が成り立つ．
+    \begin{align}
+        \binom{N}{n} = \frac Nn \binom{N-1}{n-1}
+    \end{align}
+\end{lemma}
+
+\begin{proof}
+    \begin{align}
+        \binom{N}{n} &= \frac{N (N-1)!}{n(n-1)! ((N-1)-(n-1))!} \\
+        &= \frac Nn \frac{(N-1)!}{(n-1)!((N-1)-(n-1))} \\
+        &= \frac Nn \binom{N-1}{n-1}
+    \end{align}
+\end{proof}
+
+超幾何分布の平均$E[X]$については，補題\ref{lm:combination-property-1}より$k \binom{M}{k} = M \binom{M-1}{k-1}$，また $x=0$の時は値が0になることに注意すると
+
+\begin{align}
+    E[X] &= \sum_{x=0}^{n} x \frac{\binom{M}{x} \binom{N-M}{n-x}}{\binom{N}{n}} \\
+    &= n \frac{M}{N} \sum_{x=1}^{n-1} \frac{\binom{M-1}{x-1} \binom{(N-1) - (M-1)}{(n-1)-(x-1)}}{\binom{N-1}{n-1}} \\
+    &= n \frac MN \sum_{x'=0}^{n'} \frac{\binom{M'}{x'} \binom{N' - M'}{n'-x'}}{\binom{N'}{n'}} \\
+    &= n \frac MN
+\end{align}   
+
+となる．ここで最後に$n'=n-1, x'=x-1, M'=M-1, N'=N-1$とおいた．
+次に分散を計算する．まず，後に，$V[X] = E[X(X-1)] + E[X] - E[X]^2$を利用するために$E[X(X-1)]$を計算しておく．
+これは平均の計算で行った手続きを繰り返し適用すれば，
+
+\begin{align}
+    E[X(X-1)] &= \sum_{x=0}^{n} \frac{\binom{M}{x} \binom{M-N}{n-x}}{\binom{N}{n}} \\
+    &= n(n-1) \frac {M(M-1)}{N(N-1)}
+\end{align}
+
+とできる．次に分散を計算すると
+
+\begin{align}
+    V[X] &= E[X(X-1)] + E[X] - E[X]^2 \\
+    &= n(n-1) \frac{M(M-1)}{N(N-1)} + n \frac MN - n^2 \frac{N^2}{M^2} \\
+    &= n \frac{M}{N^2} \Bigl( \frac{N(M-1)(n-1) + N(N-1) - nM(N-1)}{N-1} \Bigr) \\
+    &= n \frac{M}{N^2} \Bigl( \frac{N^2 - NM-Nn+nM}{N-1} \Bigr) = n \frac{M}{n^2} \frac{(N-n)(N-M)}{N-1}\\
+    &=n \frac{M}{N} \frac{N-n}{N-1} \biggl( 1 - \frac{M}{N} \biggr)
+\end{align}
+
+となる．ここで， $p = M/N, q = 1 - p$ とおくと $V[X] = \frac{\displaystyle N-n}{\displaystyle N-1} npq$ と表せる．
+
+なお，超幾何分布においては， $M,n$を入れ替えても変わらないため， \textbf{$M$と$n$について対称性がある}．
+
+\subsubsection{一様分布}
+
+区間$[a,b]$上の一様分布(uniform distribution)を$U(a,b)$と表す．このときpdfおよびcdfはそれぞれ
+
+\begin{align}
+    \label{eq:uniform-pdf-cdf}
+    \begin{aligned}
+        f(x) &= \begin{cases}
+            \frac{\displaystyle 1}{\displaystyle b-a}, & \text{if } a \leq x \leq b \\
+            0, & \text{otherwise}
+        \end{cases} \\
+        F(x) &= \begin{cases}
+            0, & \text{if } x < a \\
+            \frac{\displaystyle x-a}{\displaystyle b-a}, & \text{if } a \leq x \leq b \\
+            1, & \text{if } x > b
+        \end{cases}
+    \end{aligned}
+\end{align}
+
+平均と分散は以下の通りである．
+
+\begin{align}
+    E[X] &= \int_a^b \frac{x}{b-a} dx \\
+    &= \frac{b+a}{2}
+\end{align}
+
+\begin{align}
+    E[X^2] &= \int_a^b \frac{x^2}{b-a} \\
+    &= \frac{b^2 + ba + a^2}{3}
+\end{align}
+
+\begin{align}
+    V[X] &= E[X^2] - E[X] \\
+    &= \frac{(b-a)^2}{12}
+\end{align}
+
+\subsubsection{正規分布}
+
+正規分布(normail distribution, Gaussian distribution)はパラメーター$\mu, \sigma$を持つ分布族で，その密度関数は
+
+\begin{align}
+    f(x) = \frac{1}{\sqrt{2\pi} \sigma} \exp \biggl( -\frac{(x-\mu)^2}{2 \sigma^2} \biggr)
+\end{align}
+
+と表される．さらに，その中でも$\mu = 0, \sigma = 1$とした分布を標準正規分布といい，この時密度関数$f(x)$は
+
+\begin{align}
+    f(x) = \phi(x) = \frac{1}{\sqrt{2 \pi}} e^{-x^2/2}
+\end{align}
+
+となる．標準正規分布の累積分布関数cdfはしばしば $\Phi (x)$ を用いて表される．
+
+
 \newpage
 \section{Description of the Principle}
 % your text here
@@ -741,4 +884,3 @@ Avtk. Ananda Mitra Ac., \emph{The Spiritual Philosophy of Shrii Shrii Anandamurt
 ISBN: 81-7252-119-7
 \end{thebibliography}
 \end{document}
-
